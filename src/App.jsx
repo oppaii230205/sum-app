@@ -334,7 +334,7 @@ function App() {
                             </div>
 
                             {/* Success Badge */}
-                            <div className="mt-8 inline-flex items-center gap-3 px-6 py-3 bg-green-500/20 border-2 border-green-500 rounded-full">
+                            <div className="mt-8 flex justify-center items-center gap-3 px-6 py-3 bg-green-500/20 border-2 border-green-500 rounded-full">
                               <div className="w-3 h-3 bg-green-500 rounded-full animate-ping absolute"></div>
                               <div className="w-3 h-3 bg-green-500 rounded-full relative"></div>
                               <span className="text-green-400 font-bold uppercase tracking-wider text-sm">
