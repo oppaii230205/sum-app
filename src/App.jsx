@@ -4,18 +4,45 @@ function App() {
   const [num1, setNum1] = useState("");
   const [num2, setNum2] = useState("");
   const [result, setResult] = useState(null);
+  const [error, setError] = useState("");
 
   // Add event handlers
   const handleNum1Change = (e) => {
     setNum1(e.target.value);
+    // Clear error when user starts typing
+    if (error) setError("");
   };
 
   const handleNum2Change = (e) => {
     setNum2(e.target.value);
+    // Clear error when user starts typing
+    if (error) setError("");
   };
 
   const calculateSum = () => {
-    const sum = parseFloat(num1) + parseFloat(num2);
+    // Clear previous error and result
+    setError("");
+
+    // Validation: Check if inputs are empty
+    if (num1.trim() === "" || num2.trim() === "") {
+      setError("Please enter both numbers!");
+      setResult(null);
+      return;
+    }
+
+    // Convert to numbers
+    const number1 = parseFloat(num1);
+    const number2 = parseFloat(num2);
+
+    // Validation: Check if inputs are valid numbers
+    if (isNaN(number1) || isNaN(number2)) {
+      setError("Please enter valid numbers!");
+      setResult(null);
+      return;
+    }
+
+    // Calculate and set result
+    const sum = number1 + number2;
     setResult(sum);
   };
 
@@ -23,6 +50,7 @@ function App() {
     setNum1("");
     setNum2("");
     setResult(null);
+    setError("");
   };
 
   return (
@@ -123,7 +151,12 @@ function App() {
                         value={num1}
                         onChange={handleNum1Change}
                         placeholder="0"
-                        className="relative w-full px-8 py-6 bg-gray-950/50 border-2 border-gray-700 rounded-2xl text-white text-2xl font-bold placeholder-gray-600 focus:outline-none focus:border-cyan-500 focus:bg-gray-900/50 transition-all duration-300 hover:border-gray-600 shadow-inner-lg backdrop-blur-sm"
+                        className={`relative w-full px-8 py-6 bg-gray-950/50 border-2 rounded-2xl text-white text-2xl font-bold placeholder-gray-600 focus:outline-none transition-all duration-300 shadow-inner-lg backdrop-blur-sm ${
+                          error &&
+                          (num1.trim() === "" || isNaN(parseFloat(num1)))
+                            ? "border-red-500 focus:border-red-400"
+                            : "border-gray-700 focus:border-cyan-500 hover:border-gray-600"
+                        } focus:bg-gray-900/50`}
                       />
                       {/* Floating Label */}
                       <div className="absolute right-6 top-1/2 -translate-y-1/2 text-cyan-500 text-3xl font-black opacity-0 group-focus-within/input:opacity-100 transition-all duration-300 scale-0 group-focus-within/input:scale-100">
@@ -172,7 +205,12 @@ function App() {
                         value={num2}
                         onChange={handleNum2Change}
                         placeholder="0"
-                        className="relative w-full px-8 py-6 bg-gray-950/50 border-2 border-gray-700 rounded-2xl text-white text-2xl font-bold placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:bg-gray-900/50 transition-all duration-300 hover:border-gray-600 shadow-inner-lg backdrop-blur-sm"
+                        className={`relative w-full px-8 py-6 bg-gray-950/50 border-2 rounded-2xl text-white text-2xl font-bold placeholder-gray-600 focus:outline-none transition-all duration-300 shadow-inner-lg backdrop-blur-sm ${
+                          error &&
+                          (num2.trim() === "" || isNaN(parseFloat(num2)))
+                            ? "border-red-500 focus:border-red-400"
+                            : "border-gray-700 focus:border-purple-500 hover:border-gray-600"
+                        } focus:bg-gray-900/50`}
                       />
                       {/* Floating Label */}
                       <div className="absolute right-6 top-1/2 -translate-y-1/2 text-purple-500 text-3xl font-black opacity-0 group-focus-within/input:opacity-100 transition-all duration-300 scale-0 group-focus-within/input:scale-100">
@@ -181,6 +219,33 @@ function App() {
                     </div>
                   </div>
                 </div>
+
+                {/* Error Message Display */}
+                {error && (
+                  <div className="mt-8 animate-result-appear">
+                    <div className="relative">
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl blur opacity-75"></div>
+                      <div className="relative bg-red-900/20 border-2 border-red-500 rounded-2xl px-6 py-4 backdrop-blur-sm">
+                        <div className="flex items-center gap-3">
+                          <svg
+                            className="w-6 h-6 text-red-400 flex-shrink-0 animate-pulse"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <p className="text-red-300 font-bold text-sm uppercase tracking-wide">
+                            {error}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Action Buttons - Futuristic Style */}
                 <div className="mt-10 flex gap-4">
